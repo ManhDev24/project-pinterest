@@ -99,4 +99,3 @@ VALUES
 
 
 
-SELECT * FROM binh_luan WHERE hinh_id = 1;
