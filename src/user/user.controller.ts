@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseInterceptors, UploadedFiles, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseInterceptors, UploadedFiles, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,8 +6,9 @@ import { query } from 'express';
 import { CreateCommentDto } from './dto/comment.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { AuthGuard } from '@nestjs/passport';
 
-// @UseGuards(AuthGuard("jwt"))
+
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -67,14 +68,25 @@ export class UserController {
   // localhost:8080/user/get-user
   @Get('get-user')
   findAll() {
-    return this.userService.findAll();
+    try {
+      return this.userService.findAll();
+    } catch (error) {
+      console.log(error);
+      return { message: 'error...', status: HttpStatus.BAD_REQUEST }
+    }
   }
 
   // API PUT thông tin cá nhân của user
   // localhost:8080/user/put-info 
+  @UseGuards(AuthGuard("jwt"))
   @Put('put-info')
-  putInfo() {
-    return this.userService.putInfo();
+  async putInfo() {
+    try {
+      return this.userService.putInfo();
+    } catch (error) {
+      console.log(error);
+      return { message: 'error...', status: HttpStatus.BAD_REQUEST }
+    }
   }
 
 }

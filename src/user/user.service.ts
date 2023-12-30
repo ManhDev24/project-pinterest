@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, UseGuards } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt'
 import { PrismaClient } from '@prisma/client';
 import { CreateCommentDto } from './dto/comment.dto';
+import { AuthGuard } from '@nestjs/passport';
+
 @Injectable()
 export class UserService {
 
@@ -86,7 +88,7 @@ export class UserService {
     });
 
     if (!existingUser) {
-      return { message: "Người dùng không tồn tại", stauts: 404 }
+      return { message: "Người dùng không tồn tại", status: 404 }
     }
 
     const existingImage = await this.prisma.hinh_anh.findUnique({
@@ -94,7 +96,7 @@ export class UserService {
     });
 
     if (!existingImage) {
-      return { message: "Hình ko tồn tại", stauts: 404 }
+      return { message: "Hình ko tồn tại", status: 404 }
     }
 
     return this.prisma.binh_luan.create({
@@ -108,14 +110,20 @@ export class UserService {
   }
 
   // GET thông tin user
+  // @UseGuards(AuthGuard("jwt"))
   async findAll() {
-    let data = await this.prisma.nguoi_dung.findMany()
-
-    return data;
+    try {
+      let data = await this.prisma.nguoi_dung.findMany()
+      return {message:'Complete!', status: 200, data};
+    } catch (error) {
+      console.log(error);
+      return {message: 'Error Service', status: 404}
+    }
   }
 
   // PUT thông tin cá nhân của user
   putInfo() {
+
     return "ngon com";
   }
 

@@ -10,7 +10,7 @@ export class ImageService {
     async findAll() {
         let data = await this.prisma.hinh_anh.findMany();
 
-        return data;
+        return {message:'Complete!', status: 200, data};
     }
 
     // GET Tìm Kiếm Danh Sách Ảnh Theo Tên
@@ -23,7 +23,7 @@ export class ImageService {
             }
         });
 
-        return data;
+        return {message:'Complete!', status: 200, data};
     }
 
     // GET danh sách ảnh đã tạo theo user id
@@ -34,7 +34,7 @@ export class ImageService {
             }
         });
 
-        return data;
+        return {message:'Complete!', status: 200, data};
     }
 
     // GET danh sách ảnh đã lưu theo user id
@@ -45,7 +45,7 @@ export class ImageService {
             }
         });
 
-        return data;
+        return {message:'Complete!', status: 200, data};
     }
 
     // DELETE xóa ảnh đã tạo theo id ảnh
@@ -56,7 +56,7 @@ export class ImageService {
             }
         })
 
-        return data;
+        return {message:'Complete!', status: 200, data};
     }
 
 }

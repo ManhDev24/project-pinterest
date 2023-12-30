@@ -8,58 +8,48 @@ import { signinDto } from './dto/signin-dto';
 
 @Injectable()
 export class AuthService {
-constructor(    private readonly userService: UserService,
-  private readonly jwtService: JwtService){}
+  constructor(private readonly userService: UserService,
+    private readonly jwtService: JwtService) { }
   prisma = new PrismaClient();
-    create(createAuthDto: CreateAuthDto) {
+  create(createAuthDto: CreateAuthDto) {
     return 'This action adds a new auth';
   }
   async signUp(email: string, mat_khau: string) {
     let emailExists = await this.userService.checkEmailExists(email);
-    if(emailExists){
+    if (emailExists) {
       return { message: 'Email already exists', status: HttpStatus.BAD_REQUEST };
 
     }
     const user = await this.userService.createUser(email, mat_khau);
 
-    return { message: 'User registered successfully',status: HttpStatus.OK,user};
+    return { message: 'User registered successfully', status: HttpStatus.OK, user };
 
   }
   async findAll() {
     let data = await this.prisma.nguoi_dung.findMany();
     return data;
   }
-  async signin (email:string,mat_khau:string){
+  async signin(email: string, mat_khau: string) {
     try {
 
       const user = await this.userService.findByEmail(email)
-      if(!user)
-      {
-        return {message:'wrong Mail',status:500}
+      if (!user) {
+        return { message: 'wrong Mail', status: 500 }
       }
-      const checkPass = await this.userService.verifyPass(mat_khau,user.mat_khau)
-      
-      if(!checkPass){
-        return {message:'Invalid password',status:500}
+      const checkPass = await this.userService.verifyPass(mat_khau, user.mat_khau)
+
+      if (!checkPass) {
+        return { message: 'Invalid password', status: 500 }
       }
       let token = this.jwtService.signAsync({
-        data:{nguoi_dung_id :1}},{expiresIn:"10m", secret:"DOAN_XEM"})
-        console.log(token);
-        return token;
+        data: { nguoi_dung_id: user.nguoi_dung_id }
+      }, { expiresIn: "10m", secret: "DOAN_XEM" })
+      console.log(token);
+      return token;
 
     } catch (err) {
-      return {message:'Failed to sign in',status:500}
+      return { message: 'Failed to sign in', status: 500 }
     }
   }
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
 }
