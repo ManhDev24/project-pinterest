@@ -8,3 +8,8 @@ app.enableCors();
 await app.listen(8080);
 }
 bootstrap();
+
+// token mã hóa 
+// yarn add @nestjs/passport passport passport-local
+// yarn add @nestjs/jwt passport-jwt
+// yarn add -D @types/passport-jwt

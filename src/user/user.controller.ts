@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseInterceptors, UploadedFiles, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,6 +7,7 @@ import { CreateCommentDto } from './dto/comment.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
+// @UseGuards(AuthGuard("jwt"))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -15,6 +16,7 @@ export class UserController {
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
+
   @Get('image/:id')
   async getImage(@Param("id") id: string) {
     try {
@@ -61,26 +63,18 @@ export class UserController {
     }
   }
 
-
-
-  @Get()
+  // API GET thông tin user
+  // localhost:8080/user/get-user
+  @Get('get-user')
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  // API PUT thông tin cá nhân của user
+  // localhost:8080/user/put-info 
+  @Put('put-info')
+  putInfo() {
+    return this.userService.putInfo();
   }
 
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
 }
