@@ -1,3 +1,4 @@
+import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,7 +10,7 @@ import { ImageModule } from './image/image.module';
 @Module({
   imports: [AuthModule, UserModule, ConfigModule.forRoot({
     isGlobal: true
-  }), ImageModule],
+  }), ImageModule, JwtModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -110,7 +110,6 @@ export class UserService {
   }
 
   // GET thông tin user
-  // @UseGuards(AuthGuard("jwt"))
   async findAll() {
     try {
       let data = await this.prisma.nguoi_dung.findMany()
@@ -122,9 +121,9 @@ export class UserService {
   }
 
   // PUT thông tin cá nhân của user
-  putInfo() {
-
-    return "ngon com";
+  async putInfo(data, jwt) {
+    console.log(jwt);
+    return {data, jwt};
   }
 
 

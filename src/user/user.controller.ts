@@ -1,17 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseInterceptors, UploadedFiles, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseInterceptors, UploadedFiles, Put, UseGuards, Req, Headers } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { query } from 'express';
+import { request } from 'express';
 import { CreateCommentDto } from './dto/comment.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { AuthGuard } from '@nestjs/passport';
+import { jwtUtil } from 'src/util/jwtUtil';
 
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtUtil: jwtUtil
+    ) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -80,13 +84,14 @@ export class UserController {
   // localhost:8080/user/put-info 
   @UseGuards(AuthGuard("jwt"))
   @Put('put-info')
-  async putInfo() {
-    try {
-      return this.userService.putInfo();
-    } catch (error) {
-      console.log(error);
-      return { message: 'error...', status: HttpStatus.BAD_REQUEST }
-    }
+  async putInfo(@Body() data: any, @Headers ('Authorization') auth: string) {
+    // try {
+      let jwt = await this.jwtUtil.decode(auth);
+      return this.userService.putInfo(data, jwt.uuid);
+    // } catch (error) {
+    //   console.log(error);
+    //   return { message: 'error...', status: HttpStatus.BAD_REQUEST }
+    // }
   }
 
 }
