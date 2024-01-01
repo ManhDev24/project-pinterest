@@ -23,6 +23,7 @@ export class UserService {
     }
     return this.prisma.nguoi_dung.create({ data })
   }
+
   async findByEmail(email: string) {
     return this.prisma.nguoi_dung.findFirst({
       where: {
@@ -30,6 +31,7 @@ export class UserService {
       }
     })
   }
+
   async verifyPass(mat_khau: string, hashedPass: string) {
     return bcrypt.compare(mat_khau, hashedPass)
   }
@@ -44,9 +46,9 @@ export class UserService {
       return true;
     }
     return false;
-
   }
 
+  // GET thông tin ảnh và người tạo ảnh bằng id ảnh
   async getImage(id: string) {
     return this.prisma.hinh_anh.findUnique({
       where: {
@@ -57,6 +59,8 @@ export class UserService {
       }
     })
   }
+
+  // GET thông tin bình luận theo id ảnh
   async getCommentsByImageId(imageId: string) {
     return await this.prisma.binh_luan.findMany({
       where: {
@@ -64,6 +68,8 @@ export class UserService {
       }
     })
   }
+
+  // GET thông tin đã lưu hình này chưa theo id ảnh
   async getSavedInfoByImageId(id: string) {
 
     let data = await this.prisma.luu_anh.findMany({
@@ -80,6 +86,8 @@ export class UserService {
     }
     return { message: 'already save!!', status: 200, data }
   }
+  
+  // POST để lưu thông tin bình luận của người dùng với hình ảnh
   async createComment(createCommentDto: CreateCommentDto) {
     const { nguoi_dung_id, hinh_id, noi_dung } = createCommentDto;
 

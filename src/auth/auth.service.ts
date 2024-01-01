@@ -43,7 +43,7 @@ export class AuthService {
       }
       let token = this.jwtService.signAsync({
         data: { nguoi_dung_id: user.nguoi_dung_id }
-      }, { expiresIn: "10m", secret: "DOAN_XEM" })
+      }, { expiresIn: "1d", secret: "DOAN_XEM" })
       console.log(token);
       return token;
 

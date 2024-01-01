@@ -20,6 +20,8 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  // API GET thông tin ảnh và người tạo ảnh bằng id ảnh
+  // localhost:8080/user/image/:id
   @Get('image/:id')
   async getImage(@Param("id") id: string) {
     try {
@@ -29,6 +31,9 @@ export class UserController {
       return { message: 'error get image detail!!!!', status: HttpStatus.BAD_REQUEST }
     }
   }
+
+  // API GET thông tin bình luận theo id ảnh
+  // localhost:8080/user/get-comment/:id
   @Get('get-comment/:id')
   async getComent(@Param("id") id: string) {
     try {
@@ -38,6 +43,8 @@ export class UserController {
     }
   }
 
+  // API POST thêm một ảnh của user 
+  // localhost:8080/user/upload
   @UseInterceptors(FilesInterceptor("avatar", 10, {
     storage: diskStorage({
       destination: process.cwd() + "/src/img",
@@ -45,17 +52,24 @@ export class UserController {
     })
   }))
 
+  @UseGuards(JwtAuthGuard)
   @Post("/upload")
   upload(@UploadedFiles() file: Express.Multer.File[]) {
 
     return file;
   }
 
+  // API POST để lưu thông tin bình luận của người dùng với hình ảnh
+  // localhost:8080/user/comments
+  @UseGuards(JwtAuthGuard)
   @Post('comments')
   async createComment(@Body() createCommentDto: CreateCommentDto) {
     return this.userService.createComment(createCommentDto);
   }
 
+  // API GET thông tin đã lưu hình này chưa theo id ảnh
+  // localhost:8080/user/image-save/:id
+  @UseGuards(JwtAuthGuard)
   @Get('image-save/:id')
   async getSavedInfoByImageId(@Param('id') id: string) {
     try {
@@ -68,6 +82,7 @@ export class UserController {
 
   // API GET thông tin user
   // localhost:8080/user/get-user
+  @UseGuards(JwtAuthGuard)
   @Get('get-user')
   findAll() {
     try {

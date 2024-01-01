@@ -36,6 +36,7 @@ export class ImageController {
 
   // API GET danh sách ảnh đã tạo theo user id
   // localhost:8080/image/search/img-created/:userId
+  @UseGuards(JwtAuthGuard)
   @Get('search/img-created/:userId')
   findImgCreId(@Param('userId') userId: number) {
     try {
@@ -48,6 +49,7 @@ export class ImageController {
 
   // API GET danh sách ảnh đã lưu theo user id
   // localhost:8080/image/search/img-saved/:userId
+  @UseGuards(JwtAuthGuard)
   @Get('search/img-saved/:userId')
   findImgSavId(@Param('userId') userId: number) {
     try {
@@ -60,6 +62,7 @@ export class ImageController {
 
   // API DELETE xóa ảnh đã tạo theo id ảnh
   // localhost:8080/image/delete/img-created/:ImgId
+  @UseGuards(JwtAuthGuard)
   @Delete('delete/img-created/:ImgId')
   delImgCre(@Param('ImgId') ImgId: number) {
     try {
