@@ -10,7 +10,7 @@ import { ImageModule } from './image/image.module';
 @Module({
   imports: [AuthModule, UserModule, ConfigModule.forRoot({
     isGlobal: true
-  }), ImageModule, JwtModule],
+  }), ImageModule],
   controllers: [AppController],
   providers: [AppService],
 })

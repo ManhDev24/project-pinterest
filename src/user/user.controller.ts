@@ -2,20 +2,18 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { request } from 'express';
 import { CreateCommentDto } from './dto/comment.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { AuthGuard } from '@nestjs/passport';
-import { jwtUtil } from 'src/util/jwtUtil';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/util/decorator';
 
 
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtUtil: jwtUtil
-    ) { }
+  ) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -82,16 +80,18 @@ export class UserController {
 
   // API PUT thông tin cá nhân của user
   // localhost:8080/user/put-info 
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Put('put-info')
-  async putInfo(@Body() data: any, @Headers ('Authorization') auth: string) {
-    // try {
-      let jwt = await this.jwtUtil.decode(auth);
-      return this.userService.putInfo(data, jwt.uuid);
-    // } catch (error) {
-    //   console.log(error);
-    //   return { message: 'error...', status: HttpStatus.BAD_REQUEST }
-    // }
+  async putInfo(
+    @Body() data: any,
+    @User() user: any
+  ) {
+    try {
+      return this.userService.putInfo(data, user);
+    } catch (error) {
+      console.log(error);
+      return { message: 'error...', status: HttpStatus.BAD_REQUEST }
+    }
   }
 
 }

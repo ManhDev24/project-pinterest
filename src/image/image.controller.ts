@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpStatus, Request } from '@nestjs/common';
 import { ImageService } from './image.service';
 import { ConfigService } from '@nestjs/config';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-//@UseGuards(AuthGuard("jwt"))
 @Controller('image')
 export class ImageController {
   constructor(
@@ -19,7 +18,7 @@ export class ImageController {
       return this.imageService.findAll();
     } catch (error) {
       console.log(error);
-      return {message: 'Error', status: HttpStatus.BAD_REQUEST}
+      return { message: 'Error', status: HttpStatus.BAD_REQUEST }
     }
   }
 
@@ -31,7 +30,7 @@ export class ImageController {
       return this.imageService.findName(iName);
     } catch (error) {
       console.log(error);
-      return {message: 'Error', status: HttpStatus.BAD_REQUEST}
+      return { message: 'Error', status: HttpStatus.BAD_REQUEST }
     }
   }
 
@@ -43,7 +42,7 @@ export class ImageController {
       return this.imageService.findImgCreId(+userId);
     } catch (error) {
       console.log(error);
-      return {message: 'Error', status: HttpStatus.BAD_REQUEST}
+      return { message: 'Error', status: HttpStatus.BAD_REQUEST }
     }
   }
 
@@ -55,7 +54,7 @@ export class ImageController {
       return this.imageService.findImgSavId(+userId);
     } catch (error) {
       console.log(error);
-      return {message: 'Error', status: HttpStatus.BAD_REQUEST}
+      return { message: 'Error', status: HttpStatus.BAD_REQUEST }
     }
   }
 
@@ -67,7 +66,7 @@ export class ImageController {
       return this.imageService.delImgCre(+ImgId);
     } catch (error) {
       console.log(error);
-      return {message: 'Error', status: HttpStatus.BAD_REQUEST}
+      return { message: 'Error', status: HttpStatus.BAD_REQUEST }
     }
   }
 

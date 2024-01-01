@@ -113,17 +113,24 @@ export class UserService {
   async findAll() {
     try {
       let data = await this.prisma.nguoi_dung.findMany()
-      return {message:'Complete!', status: 200, data};
+      return { message: 'Complete!', status: 200, data };
     } catch (error) {
       console.log(error);
-      return {message: 'Error Service', status: 404}
+      return { message: 'Error Service', status: 404 }
     }
   }
 
   // PUT thông tin cá nhân của user
-  async putInfo(data, jwt) {
-    console.log(jwt);
-    return {data, jwt};
+  async putInfo(data, user) {
+    const updatedUser = await this.prisma.nguoi_dung.update({
+      where: {
+        nguoi_dung_id: user.data.nguoi_dung_id,
+      },
+      data: {
+        ...data
+      },
+    });
+    return updatedUser;
   }
 
 
